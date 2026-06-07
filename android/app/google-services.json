@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "725888600273",
+    "project_id": "student-complain-134c5",
+    "storage_bucket": "student-complain-134c5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725888600273:android:b5ff09015e747ce2779df0",
+        "android_client_info": {
+          "package_name": "com.example.student_complaint1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIQ1X80rBtdfi9xRS_UjQyh6JAfbiWC6M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
