@@ -2,14 +2,76 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/complaint_model.dart';
 
 class ComplaintRepository {
-  final _col = FirebaseFirestore.instance.collection('complaints');
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late final CollectionReference<Map<String, dynamic>> _col;
 
+  ComplaintRepository() {
+    _col = _firestore.collection('complaints');
+  }
+
+  // ── REAL-TIME STREAMS ──
+  Stream<List<ComplaintModel>> getMyComplaintsStream(String studentId) {
+    if (studentId.isEmpty) {
+      return Stream.value([]);
+    }
+    return _col
+        .where('studentId', isEqualTo: studentId)
+        .snapshots(includeMetadataChanges: true)
+        .map((snap) {
+          final list = snap.docs.map(ComplaintModel.fromFirestore).toList();
+          list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          return list;
+        })
+        .handleError((e) {
+          print('Error in getMyComplaintsStream: $e');
+          return <ComplaintModel>[];
+        });
+  }
+
+  Stream<List<ComplaintModel>> getAllComplaintsStream({
+    String? status,
+    String? category,
+  }) {
+    Query q = _col;
+    if (status != null) q = q.where('status', isEqualTo: status);
+    if (category != null) q = q.where('category', isEqualTo: category);
+    
+    return q
+        .snapshots(includeMetadataChanges: true)
+        .map((snap) {
+          final list = snap.docs.map(ComplaintModel.fromFirestore).toList();
+          list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          return list;
+        })
+        .handleError((e) {
+          print('Error in getAllComplaintsStream: $e');
+          return <ComplaintModel>[];
+        });
+  }
+
+  Stream<ComplaintModel?> getComplaintByIdStream(String id) {
+    if (id.isEmpty) {
+      return Stream.value(null);
+    }
+    return _col.doc(id)
+        .snapshots(includeMetadataChanges: true)
+        .map((doc) {
+          if (!doc.exists) return null;
+          return ComplaintModel.fromFirestore(doc);
+        })
+        .handleError((e) {
+          return null;
+        });
+  }
+
+  // ── ONE-TIME FETCHES (for initial load) ──
   Future<List<ComplaintModel>> getMyComplaints(String studentId) async {
     final snap = await _col
         .where('studentId', isEqualTo: studentId)
-        .orderBy('createdAt', descending: true)
         .get();
-    return snap.docs.map(ComplaintModel.fromFirestore).toList();
+    final list = snap.docs.map(ComplaintModel.fromFirestore).toList();
+    list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return list;
   }
 
   Future<List<ComplaintModel>> getAllComplaints({
@@ -17,11 +79,12 @@ class ComplaintRepository {
     String? category,
     String? search,
   }) async {
-    Query q = _col.orderBy('createdAt', descending: true);
+    Query q = _col;
     if (status != null) q = q.where('status', isEqualTo: status);
     if (category != null) q = q.where('category', isEqualTo: category);
     final snap = await q.get();
     var list = snap.docs.map(ComplaintModel.fromFirestore).toList();
+    list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     if (search != null && search.isNotEmpty) {
       final s = search.toLowerCase();
       list = list

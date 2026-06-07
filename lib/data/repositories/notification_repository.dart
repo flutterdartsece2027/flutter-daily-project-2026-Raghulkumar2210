@@ -7,9 +7,10 @@ class NotificationRepository {
   Future<List<NotificationModel>> getNotifications(String userId) async {
     final snap = await _col
         .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
         .get();
-    return snap.docs.map(NotificationModel.fromFirestore).toList();
+    final list = snap.docs.map(NotificationModel.fromFirestore).toList();
+    list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    return list;
   }
 
   Future<void> markAsRead(String id) async {

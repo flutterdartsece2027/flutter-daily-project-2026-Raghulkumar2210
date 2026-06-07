@@ -65,7 +65,7 @@ class AuthRepository {
   }
 
   Future<Map<String, dynamic>> adminLogin(String email, String password) async {
-    final cred = await _auth.signInWithEmailAndPassword(
+    await _auth.signInWithEmailAndPassword(
         email: email.trim(), password: password);
 
     final query = await _db

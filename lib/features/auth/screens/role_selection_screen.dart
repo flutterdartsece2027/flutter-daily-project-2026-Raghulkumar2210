@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
 
@@ -13,6 +14,9 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
   late AnimationController _headerCtrl;
   late AnimationController _card1Ctrl;
   late AnimationController _card2Ctrl;
+
+  Timer? _card1Timer;
+  Timer? _card2Timer;
 
   late Animation<Offset> _headerSlide;
   late Animation<double> _headerFade;
@@ -47,14 +51,18 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
     _card2Fade = Tween<double>(begin: 0, end: 1).animate(_card2Ctrl);
 
     _headerCtrl.forward();
-    Future.delayed(
-        const Duration(milliseconds: 300), () => _card1Ctrl.forward());
-    Future.delayed(
-        const Duration(milliseconds: 500), () => _card2Ctrl.forward());
+    _card1Timer = Timer(const Duration(milliseconds: 300), () {
+      if (mounted) _card1Ctrl.forward();
+    });
+    _card2Timer = Timer(const Duration(milliseconds: 500), () {
+      if (mounted) _card2Ctrl.forward();
+    });
   }
 
   @override
   void dispose() {
+    _card1Timer?.cancel();
+    _card2Timer?.cancel();
     _headerCtrl.dispose();
     _card1Ctrl.dispose();
     _card2Ctrl.dispose();

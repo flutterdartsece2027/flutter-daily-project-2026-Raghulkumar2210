@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'dart:async';
 import '../data/repositories/complaint_repository.dart';
 import '../data/models/complaint_model.dart';
 
@@ -12,6 +13,11 @@ class ComplaintProvider extends ChangeNotifier {
   bool _loading = false;
   String? _error;
   XFile? _pickedImage;
+  
+  // Stream subscriptions
+  StreamSubscription<List<ComplaintModel>>? _complaintsSubscription;
+  StreamSubscription<ComplaintModel?>? _selectedSubscription;
+  String? _currentStudentId;
 
   List<ComplaintModel> get complaints => _complaints;
   ComplaintModel? get selected => _selected;
@@ -25,35 +31,96 @@ class ComplaintProvider extends ChangeNotifier {
   int get inProgress => _complaints.where((c) => c.status == 'In Progress').length;
   int get resolved => _complaints.where((c) => c.status == 'Resolved').length;
 
-  void _setLoading(bool v) { _loading = v; notifyListeners(); }
-  void _setError(String? e) { _error = e; notifyListeners(); }
+  void _setLoading(bool v) { 
+    _loading = v; 
+    notifyListeners(); 
+  }
+  
+  void _setError(String? e) { 
+    _error = e; 
+    notifyListeners(); 
+  }
 
-  Future<void> fetchMyComplaints(String studentId) async {
+  // ── REAL-TIME LISTENERS ──
+  void listenToMyComplaints(String studentId) {
+    // Only listen if studentId is not empty and is different from current
+    if (studentId.isEmpty) {
+      _complaints = [];
+      _setLoading(false);
+      return;
+    }
+    
+    if (_currentStudentId == studentId) return; // Already listening
+    
+    _currentStudentId = studentId;
     _setLoading(true);
-    try {
-      _complaints = await _repo.getMyComplaints(studentId);
-      notifyListeners();
-    } catch (e) { _setError(e.toString()); }
-    finally { _setLoading(false); }
+    _complaintsSubscription?.cancel();
+    
+    _complaintsSubscription = _repo.getMyComplaintsStream(studentId).listen(
+      (complaints) {
+        _complaints = complaints;
+        _setError(null);
+        _setLoading(false);
+      },
+      onError: (e) {
+        print('ComplaintProvider Error: $e');
+        _setError(e.toString());
+        _setLoading(false);
+      },
+    );
+  }
+
+  void listenToAllComplaints({String? status, String? category}) {
+    _setLoading(true);
+    _complaintsSubscription?.cancel();
+    
+    _complaintsSubscription = _repo.getAllComplaintsStream(status: status, category: category).listen(
+      (complaints) {
+        _complaints = complaints;
+        _setError(null);
+        _setLoading(false);
+      },
+      onError: (e) {
+        _setError(e.toString());
+        _setLoading(false);
+      },
+    );
+  }
+
+  void listenToComplaintById(String id) {
+    if (id.isEmpty) {
+      _selected = null;
+      _setLoading(false);
+      return;
+    }
+    
+    _setLoading(true);
+    _selectedSubscription?.cancel();
+    
+    _selectedSubscription = _repo.getComplaintByIdStream(id).listen(
+      (complaint) {
+        _selected = complaint;
+        _setError(null);
+        _setLoading(false);
+      },
+      onError: (e) {
+        _setError(e.toString());
+        _setLoading(false);
+      },
+    );
+  }
+
+  // ── FALLBACK ONE-TIME FETCH (for backward compatibility) ──
+  Future<void> fetchMyComplaints(String studentId) async {
+    listenToMyComplaints(studentId);
   }
 
   Future<void> fetchAllComplaints({String? status, String? category, String? search}) async {
-    _setLoading(true);
-    try {
-      _complaints = await _repo.getAllComplaints(
-          status: status, category: category, search: search);
-      notifyListeners();
-    } catch (e) { _setError(e.toString()); }
-    finally { _setLoading(false); }
+    listenToAllComplaints(status: status, category: category);
   }
 
   Future<void> fetchComplaintById(String id) async {
-    _setLoading(true);
-    try {
-      _selected = await _repo.getComplaintById(id);
-      notifyListeners();
-    } catch (e) { _setError(e.toString()); }
-    finally { _setLoading(false); }
+    listenToComplaintById(id);
   }
 
   Future<bool> raiseComplaint({
@@ -123,4 +190,11 @@ class ComplaintProvider extends ChangeNotifier {
 
   void pickImage(XFile? file) { _pickedImage = file; notifyListeners(); }
   void clearError() => _setError(null);
+
+  @override
+  void dispose() {
+    _complaintsSubscription?.cancel();
+    _selectedSubscription?.cancel();
+    super.dispose();
+  }
 }

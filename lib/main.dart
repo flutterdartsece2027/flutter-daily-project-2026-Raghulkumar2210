@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'core/constants/app_routes.dart';
 import 'core/theme/app_theme.dart';
@@ -20,9 +21,62 @@ import 'features/student/screens/complaint_detail_screen.dart';
 import 'features/admin/screens/admin_dashboard_screen.dart';
 import 'features/profile/screens/student_profile_screen.dart';
 
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
+
+Future<void> _seedAdmin() async {
+  try {
+    final email = 'admin@portal.com';
+    final password = 'adminPassword123';
+    
+    User? user;
+    try {
+      final cred = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      user = cred.user;
+    } catch (_) {
+      final cred = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      user = cred.user;
+    }
+
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection('admins')
+          .doc(user.uid)
+          .set({
+        'name': 'System Admin',
+        'email': email,
+        'role': 'admin',
+      });
+      print('=== Seeded Admin User Successfully ===');
+      print('Email: $email');
+      print('Password: $password');
+      print('======================================');
+    }
+  } catch (e) {
+    print('Error seeding admin: $e');
+  }
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  // ── Configure Firestore BEFORE any operations ──
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true,
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+  );
+  
+  // ── Enable network after settings are configured ──
+  await FirebaseFirestore.instance.enableNetwork();
+  
+  await _seedAdmin();
+  
   runApp(const MyApp());
 }
 

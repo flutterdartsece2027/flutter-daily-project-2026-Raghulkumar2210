@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_routes.dart';
@@ -404,6 +405,7 @@ class _StatBannerCardState extends State<_StatBannerCard>
   late AnimationController _ctrl;
   late Animation<double> _scale;
   late Animation<double> _fade;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -414,12 +416,16 @@ class _StatBannerCardState extends State<_StatBannerCard>
     _scale = Tween<double>(begin: 0.7, end: 1.0)
         .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutBack));
     _fade = Tween<double>(begin: 0, end: 1).animate(_ctrl);
-    Future.delayed(Duration(milliseconds: widget.index * 80),
+    _timer = Timer(Duration(milliseconds: widget.index * 80),
         () { if (mounted) _ctrl.forward(); });
   }
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _timer?.cancel();
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -770,6 +776,7 @@ class _AnimatedComplaintCardState extends State<_AnimatedComplaintCard>
   late AnimationController _ctrl;
   late Animation<Offset> _slide;
   late Animation<double> _fade;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -780,12 +787,16 @@ class _AnimatedComplaintCardState extends State<_AnimatedComplaintCard>
         Tween<Offset>(begin: const Offset(0, 0.3), end: Offset.zero).animate(
             CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
     _fade = Tween<double>(begin: 0, end: 1).animate(_ctrl);
-    Future.delayed(Duration(milliseconds: widget.index * 80),
+    _timer = Timer(Duration(milliseconds: widget.index * 80),
         () { if (mounted) _ctrl.forward(); });
   }
 
   @override
-  void dispose() { _ctrl.dispose(); super.dispose(); }
+  void dispose() {
+    _timer?.cancel();
+    _ctrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1039,37 +1050,41 @@ class _NotificationsTab extends StatelessWidget {
                                   offset: const Offset(0, 2))
                             ],
                           ),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 4),
-                            leading: Container(
-                              width: 44,
-                              height: 44,
-                              decoration: BoxDecoration(
-                                gradient: n.isRead
-                                    ? null
-                                    : AppTheme.primaryGradient,
-                                color: n.isRead ? Colors.grey[100] : null,
-                                borderRadius: BorderRadius.circular(14),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: ListTile(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 4),
+                              leading: Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  gradient: n.isRead
+                                      ? null
+                                      : AppTheme.primaryGradient,
+                                  color: n.isRead ? Colors.grey[100] : null,
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: Icon(Icons.notifications_rounded,
+                                    color: n.isRead
+                                        ? Colors.grey[400]
+                                        : Colors.white,
+                                    size: 20),
                               ),
-                              child: Icon(Icons.notifications_rounded,
-                                  color: n.isRead
-                                      ? Colors.grey[400]
-                                      : Colors.white,
-                                  size: 20),
+                              title: Text(n.title,
+                                  style: TextStyle(
+                                      fontWeight: n.isRead
+                                          ? FontWeight.w500
+                                          : FontWeight.w700,
+                                      fontSize: 13)),
+                              subtitle: Text(n.message,
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.grey[500]),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis),
+                              onTap: () => np.markAsRead(n.id),
                             ),
-                            title: Text(n.title,
-                                style: TextStyle(
-                                    fontWeight: n.isRead
-                                        ? FontWeight.w500
-                                        : FontWeight.w700,
-                                    fontSize: 13)),
-                            subtitle: Text(n.message,
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey[500]),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis),
-                            onTap: () => np.markAsRead(n.id),
                           ),
                         );
                       },
@@ -1225,36 +1240,38 @@ class _ProfileTile extends StatelessWidget {
               offset: const Offset(0, 2))
         ],
       ),
-      child: ListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        leading: Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(14),
+      child: Material(
+        color: Colors.transparent,
+        child: ListTile(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          leading: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(icon, color: color, size: 22),
           ),
-          child: Icon(icon, color: color, size: 22),
-        ),
-        title: Text(title,
-            style: const TextStyle(
-                fontWeight: FontWeight.w600, fontSize: 14)),
-        subtitle: Text(subtitle,
-            style: TextStyle(color: Colors.grey[500], fontSize: 11)),
-        trailing: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.circular(8),
+          title: Text(title,
+              style: const TextStyle(
+                  fontWeight: FontWeight.w600, fontSize: 14)),
+          subtitle: Text(subtitle,
+              style: TextStyle(color: Colors.grey[500], fontSize: 11)),
+          trailing: Container(
+            width: 30,
+            height: 30,
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child:
+                Icon(Icons.chevron_right_rounded, color: Colors.grey[400], size: 18),
           ),
-          child:
-              Icon(Icons.chevron_right_rounded, color: Colors.grey[400], size: 18),
+          onTap: onTap,
         ),
-        onTap: onTap,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_constants.dart';
@@ -25,6 +26,9 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<Offset> _textSlide;
   late Animation<double> _pulse;
   late Animation<double> _particleAnim;
+
+  Timer? _textTimer;
+  Timer? _navigationTimer;
 
   @override
   void initState() {
@@ -55,28 +59,32 @@ class _SplashScreenState extends State<SplashScreen>
     _particleAnim = Tween<double>(begin: 0.0, end: 1.0).animate(_particleCtrl);
 
     _logoCtrl.forward();
-    Future.delayed(const Duration(milliseconds: 600),
-        () => _textCtrl.forward());
+    _textTimer = Timer(const Duration(milliseconds: 600), () {
+      if (mounted) _textCtrl.forward();
+    });
     _navigate();
   }
 
-  Future<void> _navigate() async {
-    await Future.delayed(const Duration(milliseconds: 3500));
-    if (!mounted) return;
-    final auth = context.read<AuthProvider>();
-    await auth.checkLoginStatus();
-    if (!mounted) return;
-    if (auth.isStudent) {
-      Navigator.pushReplacementNamed(context, AppRoutes.studentDashboard);
-    } else if (auth.isAdmin) {
-      Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
-    } else {
-      Navigator.pushReplacementNamed(context, AppRoutes.roleSelection);
-    }
+  void _navigate() {
+    _navigationTimer = Timer(const Duration(milliseconds: 3500), () async {
+      if (!mounted) return;
+      final auth = context.read<AuthProvider>();
+      await auth.checkLoginStatus();
+      if (!mounted) return;
+      if (auth.isStudent) {
+        Navigator.pushReplacementNamed(context, AppRoutes.studentDashboard);
+      } else if (auth.isAdmin) {
+        Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
+      } else {
+        Navigator.pushReplacementNamed(context, AppRoutes.roleSelection);
+      }
+    });
   }
 
   @override
   void dispose() {
+    _textTimer?.cancel();
+    _navigationTimer?.cancel();
     _logoCtrl.dispose();
     _textCtrl.dispose();
     _pulseCtrl.dispose();
@@ -258,6 +266,7 @@ class _AnimatedDotsState extends State<_AnimatedDots>
     with TickerProviderStateMixin {
   late List<AnimationController> _ctls;
   late List<Animation<double>> _anims;
+  final List<Timer> _timers = [];
 
   @override
   void initState() {
@@ -276,14 +285,20 @@ class _AnimatedDotsState extends State<_AnimatedDots>
                 CurvedAnimation(parent: c, curve: Curves.easeInOut)))
         .toList();
     for (int i = 0; i < 3; i++) {
-      Future.delayed(Duration(milliseconds: i * 200),
-          () { if (mounted) _ctls[i].repeat(reverse: true); });
+      _timers.add(Timer(Duration(milliseconds: i * 200), () {
+        if (mounted) _ctls[i].repeat(reverse: true);
+      }));
     }
   }
 
   @override
   void dispose() {
-    for (final c in _ctls) { c.dispose(); }
+    for (final t in _timers) {
+      t.cancel();
+    }
+    for (final c in _ctls) {
+      c.dispose();
+    }
     super.dispose();
   }
 

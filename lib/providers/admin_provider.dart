@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../data/repositories/admin_repository.dart';
 import '../data/repositories/complaint_repository.dart';
 import '../data/models/user_model.dart';
@@ -15,6 +16,9 @@ class AdminProvider extends ChangeNotifier {
   Map<String, dynamic> _deptReport = {};
   bool _loading = false;
   String? _error;
+  
+  // Stream subscription
+  StreamSubscription<List<ComplaintModel>>? _complaintsSubscription;
 
   List<UserModel> get students => _students;
   List<ComplaintModel> get complaints => _complaints;
@@ -24,32 +28,51 @@ class AdminProvider extends ChangeNotifier {
   bool get loading => _loading;
   String? get error => _error;
 
-  void _setLoading(bool v) { _loading = v; notifyListeners(); }
-  void _setError(String? e) { _error = e; notifyListeners(); }
+  void _setLoading(bool v) { 
+    _loading = v; 
+    notifyListeners(); 
+  }
+  
+  void _setError(String? e) { 
+    _error = e; 
+    notifyListeners(); 
+  }
 
   Future<void> fetchDashboardStats() async {
     _setLoading(true);
     try {
       _dashStats = await _adminRepo.getDashboardStats();
+      _setError(null);
       notifyListeners();
     } catch (e) {
+
       _setError(e.toString());
     } finally {
       _setLoading(false);
     }
   }
 
-  Future<void> fetchAllComplaints({String? status, String? category, String? search}) async {
+  // ── REAL-TIME LISTENER ──
+  void listenToAllComplaints({String? status, String? category}) {
     _setLoading(true);
-    try {
-      _complaints = await _complaintRepo.getAllComplaints(
-          status: status, category: category, search: search);
-      notifyListeners();
-    } catch (e) {
-      _setError(e.toString());
-    } finally {
-      _setLoading(false);
-    }
+    _complaintsSubscription?.cancel();
+    
+    _complaintsSubscription = _complaintRepo.getAllComplaintsStream(status: status, category: category).listen(
+      (complaints) {
+        _complaints = complaints;
+        _setError(null);
+        _setLoading(false);
+      },
+      onError: (e) {
+        _setError(e.toString());
+        _setLoading(false);
+      },
+    );
+  }
+
+  // ── FALLBACK ONE-TIME FETCH ──
+  Future<void> fetchAllComplaints({String? status, String? category, String? search}) async {
+    listenToAllComplaints(status: status, category: category);
   }
 
   Future<bool> updateComplaintStatus(String id, String status, {String? remarks}) async {
@@ -124,5 +147,11 @@ class AdminProvider extends ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  @override
+  void dispose() {
+    _complaintsSubscription?.cancel();
+    super.dispose();
   }
 }
