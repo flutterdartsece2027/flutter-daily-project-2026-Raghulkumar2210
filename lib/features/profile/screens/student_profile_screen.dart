@@ -48,7 +48,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundColor: AppTheme.primary.withValues(alpha: 0.15),
+                    backgroundColor: AppTheme.primary.withOpacity(0.15),
                     child: Text(
                       s?.name.isNotEmpty == true
                           ? s!.name[0].toUpperCase()
@@ -138,3 +138,4 @@ class _InfoTile extends StatelessWidget {
     );
   }
 }
+

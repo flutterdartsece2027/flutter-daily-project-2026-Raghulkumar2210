@@ -130,6 +130,8 @@ class ComplaintProvider extends ChangeNotifier {
     required String studentId,
     required String studentName,
     required String department,
+    double? latitude,
+    double? longitude,
   }) async {
     _setLoading(true); _setError(null);
     try {
@@ -141,6 +143,8 @@ class ComplaintProvider extends ChangeNotifier {
         studentName: studentName,
         department: department,
         imagePath: _pickedImage?.path,
+        latitude: latitude,
+        longitude: longitude,
       );
       _complaints.insert(0, c);
       _pickedImage = null;

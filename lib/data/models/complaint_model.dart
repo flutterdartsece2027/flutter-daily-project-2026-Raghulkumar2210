@@ -16,6 +16,8 @@ class ComplaintModel {
   final List<TimelineEvent> timeline;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final double? latitude;
+  final double? longitude;
 
   ComplaintModel({
     required this.id,
@@ -33,6 +35,8 @@ class ComplaintModel {
     this.timeline = const [],
     required this.createdAt,
     required this.updatedAt,
+    this.latitude,
+    this.longitude,
   });
 
   factory ComplaintModel.fromFirestore(DocumentSnapshot doc) {
@@ -57,6 +61,8 @@ class ComplaintModel {
           .toList(),
       createdAt: (d['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (d['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      latitude: d['latitude'] != null ? (d['latitude'] as num).toDouble() : null,
+      longitude: d['longitude'] != null ? (d['longitude'] as num).toDouble() : null,
     );
   }
 
@@ -75,6 +81,8 @@ class ComplaintModel {
         'timeline': timeline.map((e) => e.toMap()).toList(),
         'createdAt': Timestamp.fromDate(createdAt),
         'updatedAt': Timestamp.fromDate(updatedAt),
+        'latitude': latitude,
+        'longitude': longitude,
       };
 }
 

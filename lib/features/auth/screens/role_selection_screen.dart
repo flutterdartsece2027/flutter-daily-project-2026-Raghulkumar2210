@@ -90,10 +90,10 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
                         width: 80,
                         height: 80,
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.15),
+                          color: Colors.white.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(24),
                           border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.3)),
+                              color: Colors.white.withOpacity(0.3)),
                         ),
                         child: const Center(
                           child: Icon(Icons.school_rounded,
@@ -115,7 +115,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
                       Text(
                         'Choose your role to get started',
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.65),
+                          color: Colors.white.withOpacity(0.65),
                           fontSize: 14,
                         ),
                       ),
@@ -131,11 +131,11 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
                     child: _RoleCard(
                       gradient: AppTheme.studentCardGradient,
                       icon: Icons.person_rounded,
-                      iconBg: Colors.white.withValues(alpha: 0.2),
+                      iconBg: Colors.white.withOpacity(0.2),
                       title: 'Student',
                       subtitle: 'Register & raise complaints',
                       tag: 'LOGIN / REGISTER',
-                      tagColor: Colors.white.withValues(alpha: 0.3),
+                      tagColor: Colors.white.withOpacity(0.3),
                       onTap: () =>
                           Navigator.pushNamed(context, AppRoutes.studentLogin),
                     ),
@@ -154,11 +154,11 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
                         end: Alignment.bottomRight,
                       ),
                       icon: Icons.admin_panel_settings_rounded,
-                      iconBg: AppTheme.primaryLight.withValues(alpha: 0.25),
+                      iconBg: AppTheme.primaryLight.withOpacity(0.25),
                       title: 'Admin',
                       subtitle: 'Manage & resolve complaints',
                       tag: 'AUTHORIZED ONLY',
-                      tagColor: AppTheme.primaryLight.withValues(alpha: 0.4),
+                      tagColor: AppTheme.primaryLight.withOpacity(0.4),
                       onTap: () =>
                           Navigator.pushNamed(context, AppRoutes.adminLogin),
                     ),
@@ -168,7 +168,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
                 Text(
                   '© 2025 College Portal',
                   style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.35),
+                      color: Colors.white.withOpacity(0.35),
                       fontSize: 12),
                 ),
                 const SizedBox(height: 16),
@@ -244,7 +244,7 @@ class _RoleCardState extends State<_RoleCard>
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: widget.gradient.colors.first.withValues(alpha: 0.4),
+                color: widget.gradient.colors.first.withOpacity(0.4),
                 blurRadius: 24,
                 offset: const Offset(0, 10),
               ),
@@ -273,7 +273,7 @@ class _RoleCardState extends State<_RoleCard>
                   const SizedBox(height: 3),
                   Text(widget.subtitle,
                       style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.7),
+                          color: Colors.white.withOpacity(0.7),
                           fontSize: 13)),
                   const SizedBox(height: 10),
                   Container(
@@ -297,7 +297,7 @@ class _RoleCardState extends State<_RoleCard>
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
+                color: Colors.white.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(Icons.arrow_forward_rounded,
@@ -309,3 +309,4 @@ class _RoleCardState extends State<_RoleCard>
     );
   }
 }
+

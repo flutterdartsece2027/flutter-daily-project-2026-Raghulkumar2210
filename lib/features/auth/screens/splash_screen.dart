@@ -115,7 +115,7 @@ class _SplashScreenState extends State<SplashScreen>
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
                           colors: [
-                            AppTheme.primaryLight.withValues(alpha: 0.25),
+                            AppTheme.primaryLight.withOpacity(0.25),
                             Colors.transparent,
                           ],
                         ),
@@ -143,7 +143,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 boxShadow: [
                                   BoxShadow(
                                     color: AppTheme.primaryLight
-                                        .withValues(alpha: 0.6),
+                                        .withOpacity(0.6),
                                     blurRadius: 40,
                                     spreadRadius: 5,
                                     offset: const Offset(0, 8),
@@ -191,7 +191,7 @@ class _SplashScreenState extends State<SplashScreen>
                               Text(
                                 'Your Voice. Our Priority.',
                                 style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.65),
+                                  color: Colors.white.withOpacity(0.65),
                                   fontSize: 14,
                                   letterSpacing: 1.5,
                                   fontWeight: FontWeight.w300,
@@ -209,7 +209,7 @@ class _SplashScreenState extends State<SplashScreen>
                             Text(
                               AppConstants.appName,
                               style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.4),
+                                color: Colors.white.withOpacity(0.4),
                                 fontSize: 11,
                                 letterSpacing: 2,
                               ),
@@ -323,3 +323,4 @@ class _AnimatedDotsState extends State<_AnimatedDots>
     );
   }
 }
+

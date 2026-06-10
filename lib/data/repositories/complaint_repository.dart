@@ -110,6 +110,8 @@ class ComplaintRepository {
     required String studentName,
     required String department,
     String? imagePath,
+    double? latitude,
+    double? longitude,
   }) async {
     final now = DateTime.now();
     final data = ComplaintModel(
@@ -131,6 +133,8 @@ class ComplaintRepository {
       ],
       createdAt: now,
       updatedAt: now,
+      latitude: latitude,
+      longitude: longitude,
     );
     final ref = await _col.add(data.toFirestore());
     return ComplaintModel.fromFirestore(await ref.get());

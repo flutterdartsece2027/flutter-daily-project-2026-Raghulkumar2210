@@ -28,6 +28,11 @@ Future<void> _seedAdmin() async {
     final email = 'admin@portal.com';
     final password = 'adminPassword123';
     
+    // If a user is already signed in (e.g., student or admin), preserve their session.
+    if (FirebaseAuth.instance.currentUser != null) {
+      return;
+    }
+    
     User? user;
     try {
       final cred = await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -57,6 +62,9 @@ Future<void> _seedAdmin() async {
       print('Password: $password');
       print('======================================');
     }
+    
+    // Sign out of the temporary seed session so the app starts in a logged-out state
+    await FirebaseAuth.instance.signOut();
   } catch (e) {
     print('Error seeding admin: $e');
   }

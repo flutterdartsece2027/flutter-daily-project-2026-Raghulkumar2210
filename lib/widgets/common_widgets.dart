@@ -30,7 +30,7 @@ class GradientButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: loading ? [] : [
             BoxShadow(
-              color: AppTheme.primary.withValues(alpha: 0.40),
+              color: AppTheme.primary.withOpacity(0.40),
               blurRadius: 16,
               offset: const Offset(0, 6),
             ),
@@ -137,7 +137,7 @@ class StatCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: color.withValues(alpha: 0.15),
+              color: color.withOpacity(0.15),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -149,7 +149,7 @@ class StatCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
+                color: color.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: color, size: 22),
@@ -193,9 +193,9 @@ class StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: _color.withValues(alpha: 0.12),
+        color: _color.withOpacity(0.12),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: _color.withValues(alpha: 0.4)),
+        border: Border.all(color: _color.withOpacity(0.4)),
       ),
       child: Text(
         status,
@@ -252,7 +252,7 @@ class ComplaintCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.06),
+              color: Colors.black.withOpacity(0.06),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -291,7 +291,7 @@ class ComplaintCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: AppTheme.primary.withValues(alpha: 0.08),
+                          color: AppTheme.primary.withOpacity(0.08),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(category,
@@ -316,10 +316,10 @@ class ComplaintCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: _statusColor.withValues(alpha: 0.1),
+                  color: _statusColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                      color: _statusColor.withValues(alpha: 0.3)),
+                      color: _statusColor.withOpacity(0.3)),
                 ),
                 child: Row(mainAxisSize: MainAxisSize.min, children: [
                   Icon(_statusIcon, color: _statusColor, size: 12),
@@ -388,7 +388,7 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
         gradient: gradient ?? AppTheme.primaryGradient,
         boxShadow: [
           BoxShadow(
-              color: AppTheme.primary.withValues(alpha: 0.3),
+              color: AppTheme.primary.withOpacity(0.3),
               blurRadius: 8,
               offset: const Offset(0, 2)),
         ],
@@ -402,3 +402,4 @@ class GradientAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
+

@@ -20,6 +20,8 @@ class _RaiseComplaintScreenState extends State<RaiseComplaintScreen> {
   final _titleCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
   String _category = AppConstants.complaintCategories.first;
+  double? _latitude;
+  double? _longitude;
 
   @override
   void dispose() {
@@ -49,6 +51,8 @@ class _RaiseComplaintScreenState extends State<RaiseComplaintScreen> {
       studentId: student?.id ?? '',
       studentName: student?.name ?? '',
       department: student?.department ?? '',
+      latitude: _latitude,
+      longitude: _longitude,
     );
     if (!mounted) return;
     if (ok) {

@@ -77,7 +77,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen>
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.15),
+                      color: Colors.white.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(Icons.arrow_back_ios_new_rounded,
@@ -103,7 +103,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen>
                   const SizedBox(height: 4),
                   Text('Sign in to your student account',
                       style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.65),
+                          color: Colors.white.withOpacity(0.65),
                           fontSize: 14)),
                 ],
               ),
@@ -206,3 +206,4 @@ class _StudentLoginScreenState extends State<StudentLoginScreen>
     );
   }
 }
+

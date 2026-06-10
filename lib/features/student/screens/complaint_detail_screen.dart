@@ -70,7 +70,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
+                      color: Colors.black.withOpacity(0.05),
                       blurRadius: 8)
                 ],
               ),
@@ -91,7 +91,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                        color: AppTheme.primary.withValues(alpha: 0.1),
+                        color: AppTheme.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(c.category,
@@ -123,10 +123,10 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppTheme.warning.withValues(alpha: 0.1),
+                        color: AppTheme.warning.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                            color: AppTheme.warning.withValues(alpha: 0.3)),
+                            color: AppTheme.warning.withOpacity(0.3)),
                       ),
                       child: Row(children: [
                         const Icon(Icons.info_outline,
@@ -222,7 +222,7 @@ class _TimelineWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05), blurRadius: 8)
+              color: Colors.black.withOpacity(0.05), blurRadius: 8)
         ],
       ),
       child: Column(
@@ -286,12 +286,12 @@ class _CommentBubble extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: comment.isAdmin
-            ? AppTheme.primary.withValues(alpha: 0.06)
+            ? AppTheme.primary.withOpacity(0.06)
             : Colors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
             color: comment.isAdmin
-                ? AppTheme.primary.withValues(alpha: 0.2)
+                ? AppTheme.primary.withOpacity(0.2)
                 : Colors.grey[200]!),
       ),
       child: Column(
@@ -301,7 +301,7 @@ class _CommentBubble extends StatelessWidget {
             CircleAvatar(
               radius: 14,
               backgroundColor: comment.isAdmin
-                  ? AppTheme.primary.withValues(alpha: 0.2)
+                  ? AppTheme.primary.withOpacity(0.2)
                   : Colors.grey[200],
               child: Icon(
                 comment.isAdmin
@@ -321,7 +321,7 @@ class _CommentBubble extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppTheme.primary.withValues(alpha: 0.15),
+                  color: AppTheme.primary.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: const Text('Admin',
@@ -341,3 +341,4 @@ class _CommentBubble extends StatelessWidget {
     );
   }
 }
+

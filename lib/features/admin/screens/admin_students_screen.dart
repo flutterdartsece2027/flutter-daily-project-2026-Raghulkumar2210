@@ -65,12 +65,12 @@ class _AdminStudentsScreenState extends State<AdminStudentsScreen> {
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: s.isBlocked
-                                    ? AppTheme.error.withValues(alpha: 0.3)
+                                    ? AppTheme.error.withOpacity(0.3)
                                     : Colors.grey.shade200,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.04),
+                                    color: Colors.black.withOpacity(0.04),
                                     blurRadius: 6)
                               ],
                             ),
@@ -78,8 +78,8 @@ class _AdminStudentsScreenState extends State<AdminStudentsScreen> {
                               CircleAvatar(
                                 radius: 24,
                                 backgroundColor: s.isBlocked
-                                    ? AppTheme.error.withValues(alpha: 0.15)
-                                    : AppTheme.primary.withValues(alpha: 0.15),
+                                    ? AppTheme.error.withOpacity(0.15)
+                                    : AppTheme.primary.withOpacity(0.15),
                                 child: Text(
                                   s.name.isNotEmpty ? s.name[0].toUpperCase() : 'S',
                                   style: TextStyle(
@@ -109,7 +109,7 @@ class _AdminStudentsScreenState extends State<AdminStudentsScreen> {
                                                 horizontal: 8, vertical: 2),
                                             decoration: BoxDecoration(
                                               color: AppTheme.error
-                                                  .withValues(alpha: 0.1),
+                                                  .withOpacity(0.1),
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                             ),
@@ -201,3 +201,4 @@ class _AdminStudentsScreenState extends State<AdminStudentsScreen> {
     );
   }
 }
+

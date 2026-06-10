@@ -90,7 +90,7 @@ class _AnimatedFABState extends State<_AnimatedFAB>
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.primary.withValues(alpha: 0.45),
+                color: AppTheme.primary.withOpacity(0.45),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -201,7 +201,7 @@ class _HomeTab extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: AppTheme.primary.withValues(alpha: 0.1),
+                        color: AppTheme.primary.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Text('See All',
@@ -266,7 +266,7 @@ class _DashboardHeader extends StatelessWidget {
                     children: [
                       Text('Good ${_greeting()} 👋',
                           style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.75),
+                              color: Colors.white.withOpacity(0.75),
                               fontSize: 13)),
                       const SizedBox(height: 4),
                       Text(name,
@@ -281,7 +281,7 @@ class _DashboardHeader extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 3),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
+                            color: Colors.white.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(department,
@@ -294,7 +294,7 @@ class _DashboardHeader extends StatelessWidget {
                           const SizedBox(width: 8),
                           Text(rollNo,
                               style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.6),
+                                  color: Colors.white.withOpacity(0.6),
                                   fontSize: 11)),
                         ],
                       ]),
@@ -306,10 +306,10 @@ class _DashboardHeader extends StatelessWidget {
                   width: 52,
                   height: 52,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.4), width: 2),
+                        color: Colors.white.withOpacity(0.4), width: 2),
                   ),
                   child: Center(
                     child: Text(
@@ -441,7 +441,7 @@ class _StatBannerCardState extends State<_StatBannerCard>
             borderRadius: BorderRadius.circular(22),
             boxShadow: [
               BoxShadow(
-                color: widget.item.gradient.colors.first.withValues(alpha: 0.2),
+                color: widget.item.gradient.colors.first.withOpacity(0.2),
                 blurRadius: 16,
                 offset: const Offset(0, 6),
               ),
@@ -548,7 +548,7 @@ class _ProgressSection extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withValues(alpha: 0.35),
+            color: AppTheme.primary.withOpacity(0.35),
             blurRadius: 24,
             offset: const Offset(0, 10),
           ),
@@ -569,12 +569,12 @@ class _ProgressSection extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.12),
+                  color: Colors.white.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text('${cp.total} Total',
                     style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.85),
+                        color: Colors.white.withOpacity(0.85),
                         fontSize: 11,
                         fontWeight: FontWeight.w600)),
               ),
@@ -606,7 +606,7 @@ class _ProgressSection extends StatelessWidget {
                         ),
                         Text('Done',
                             style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.6),
+                                color: Colors.white.withOpacity(0.6),
                                 fontSize: 10)),
                       ],
                     ),
@@ -672,7 +672,7 @@ class _RingLegend extends StatelessWidget {
           Expanded(
             child: Text(label,
                 style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.75),
+                    color: Colors.white.withOpacity(0.75),
                     fontSize: 12)),
           ),
           Text('$value',
@@ -686,7 +686,7 @@ class _RingLegend extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
           child: LinearProgressIndicator(
             value: pct,
-            backgroundColor: Colors.white.withValues(alpha: 0.1),
+            backgroundColor: Colors.white.withOpacity(0.1),
             valueColor: AlwaysStoppedAnimation<Color>(color),
             minHeight: 4,
           ),
@@ -724,7 +724,7 @@ class _RingPainter extends CustomPainter {
       2 * pi,
       false,
       Paint()
-        ..color = Colors.white.withValues(alpha: 0.08)
+        ..color = Colors.white.withOpacity(0.08)
         ..style = PaintingStyle.stroke
         ..strokeWidth = strokeWidth,
     );
@@ -829,7 +829,7 @@ class _EmptyComplaints extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
+              color: Colors.black.withOpacity(0.04),
               blurRadius: 12,
               offset: const Offset(0, 4)),
         ],
@@ -888,7 +888,7 @@ class _ComplaintsTabState extends State<_ComplaintsTab> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
               decoration: BoxDecoration(
-                color: AppTheme.primary.withValues(alpha: 0.1),
+                color: AppTheme.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text('${filtered.length}',
@@ -922,7 +922,7 @@ class _ComplaintsTabState extends State<_ComplaintsTab> {
                     boxShadow: sel
                         ? [
                             BoxShadow(
-                              color: AppTheme.primary.withValues(alpha: 0.3),
+                              color: AppTheme.primary.withOpacity(0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 3),
                             )
@@ -989,7 +989,7 @@ class _NotificationsTab extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppTheme.primary.withValues(alpha: 0.1),
+                    color: AppTheme.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Text('Mark all read',
@@ -1035,17 +1035,17 @@ class _NotificationsTab extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: n.isRead
                                 ? Colors.white
-                                : AppTheme.primary.withValues(alpha: 0.05),
+                                : AppTheme.primary.withOpacity(0.05),
                             borderRadius: BorderRadius.circular(18),
                             border: Border.all(
                                 color: n.isRead
                                     ? Colors.grey[200]!
                                     : AppTheme.primary
-                                        .withValues(alpha: 0.25)),
+                                        .withOpacity(0.25)),
                             boxShadow: [
                               BoxShadow(
                                   color:
-                                      Colors.black.withValues(alpha: 0.04),
+                                      Colors.black.withOpacity(0.04),
                                   blurRadius: 8,
                                   offset: const Offset(0, 2))
                             ],
@@ -1118,10 +1118,10 @@ class _ProfileTab extends StatelessWidget {
                     width: 88,
                     height: 88,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.25),
+                      color: Colors.white.withOpacity(0.25),
                       borderRadius: BorderRadius.circular(26),
                       border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.5), width: 2),
+                          color: Colors.white.withOpacity(0.5), width: 2),
                     ),
                     child: Center(
                       child: Text(
@@ -1156,7 +1156,7 @@ class _ProfileTab extends StatelessWidget {
               const SizedBox(height: 4),
               Text(s?.email ?? '',
                   style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.75),
+                      color: Colors.white.withOpacity(0.75),
                       fontSize: 13)),
               const SizedBox(height: 10),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -1175,10 +1175,6 @@ class _ProfileTab extends StatelessWidget {
                   () => Navigator.pushNamed(context, AppRoutes.studentProfile)),
               _ProfileTile(Icons.lock_outline_rounded, 'Change Password',
                   'Update your password', AppTheme.secondary, () {}),
-              _ProfileTile(Icons.help_outline_rounded, 'Help & Support',
-                  'Get assistance', const Color(0xFF8B5CF6), () {}),
-              _ProfileTile(Icons.info_outline_rounded, 'About App',
-                  'Version 1.0.0', Colors.grey, () {}),
               const SizedBox(height: 8),
               _ProfileTile(Icons.logout_rounded, 'Logout',
                   'Sign out of your account', AppTheme.error, () async {
@@ -1205,10 +1201,10 @@ class _PillBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.2),
+        color: Colors.white.withOpacity(0.2),
         borderRadius: BorderRadius.circular(20),
         border:
-            Border.all(color: Colors.white.withValues(alpha: 0.3)),
+            Border.all(color: Colors.white.withOpacity(0.3)),
       ),
       child: Text(text,
           style: const TextStyle(
@@ -1235,7 +1231,7 @@ class _ProfileTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withValues(alpha: 0.04),
+              color: Colors.black.withOpacity(0.04),
               blurRadius: 8,
               offset: const Offset(0, 2))
         ],
@@ -1250,7 +1246,7 @@ class _ProfileTile extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
+              color: color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(icon, color: color, size: 22),
@@ -1276,3 +1272,4 @@ class _ProfileTile extends StatelessWidget {
     );
   }
 }
+

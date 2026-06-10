@@ -89,7 +89,7 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
                             color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                     Text('Register as a student',
                         style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.8), fontSize: 14)),
+                            color: Colors.white.withOpacity(0.8), fontSize: 14)),
                   ],
                 ),
               ),
@@ -190,3 +190,4 @@ class _StudentRegisterScreenState extends State<StudentRegisterScreen> {
     );
   }
 }
+

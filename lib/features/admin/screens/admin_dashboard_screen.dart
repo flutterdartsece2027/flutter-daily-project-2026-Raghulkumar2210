@@ -97,7 +97,7 @@ class _AdminHomeTab extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.15),
+                            color: Colors.white.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white, size: 28),
@@ -106,7 +106,7 @@ class _AdminHomeTab extends StatelessWidget {
                         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text('Welcome, ${auth.admin?.name ?? 'Admin'}',
                               style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                          Text('Admin Portal', style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 13)),
+                          Text('Admin Portal', style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 13)),
                         ]),
                       ]),
                     ],
@@ -177,3 +177,4 @@ class _AdminHomeTab extends StatelessWidget {
     );
   }
 }
+

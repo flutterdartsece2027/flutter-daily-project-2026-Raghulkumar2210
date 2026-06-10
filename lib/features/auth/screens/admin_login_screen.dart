@@ -75,10 +75,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen>
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: Colors.white.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.2)),
+                          color: Colors.white.withOpacity(0.2)),
                     ),
                     child: const Icon(Icons.arrow_back_ios_new_rounded,
                         color: Colors.white, size: 18),
@@ -98,7 +98,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen>
                       borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
-                          color: AppTheme.primary.withValues(alpha: 0.5),
+                          color: AppTheme.primary.withOpacity(0.5),
                           blurRadius: 20,
                           offset: const Offset(0, 6),
                         )
@@ -118,7 +118,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen>
                   const SizedBox(height: 4),
                   Text('Restricted access — authorized only',
                       style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.55),
+                          color: Colors.white.withOpacity(0.55),
                           fontSize: 13)),
                 ],
               ),
@@ -145,11 +145,11 @@ class _AdminLoginScreenState extends State<AdminLoginScreen>
                             padding: const EdgeInsets.all(14),
                             decoration: BoxDecoration(
                               color:
-                                  AppTheme.primary.withValues(alpha: 0.07),
+                                  AppTheme.primary.withOpacity(0.07),
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                   color: AppTheme.primary
-                                      .withValues(alpha: 0.2)),
+                                      .withOpacity(0.2)),
                             ),
                             child: Row(children: [
                               const Icon(Icons.shield_outlined,
@@ -209,3 +209,4 @@ class _AdminLoginScreenState extends State<AdminLoginScreen>
     );
   }
 }
+
