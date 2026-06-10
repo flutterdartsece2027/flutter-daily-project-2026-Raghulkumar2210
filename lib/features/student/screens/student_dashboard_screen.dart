@@ -2,11 +2,13 @@ import 'dart:math';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as rp;
 import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/complaint_provider.dart';
 import '../../../providers/notification_provider.dart';
+import '../../../providers/theme_provider.dart';
 import '../../../widgets/common_widgets.dart';
 
 class StudentDashboardScreen extends StatefulWidget {
@@ -190,11 +192,11 @@ class _HomeTab extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Recent Complaints',
+                  Text('Recent Complaints',
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
-                          color: Color(0xFF1A1A2E))),
+                          color: Theme.of(context).colorScheme.onSurface)),
                   GestureDetector(
                     onTap: () {},
                     child: Container(
@@ -362,11 +364,11 @@ class _StatsBanner extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Overview',
+        Text('Overview',
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF1A1A2E))),
+                color: Theme.of(context).colorScheme.onSurface)),
         const SizedBox(height: 14),
         SizedBox(
           height: 120,
@@ -437,7 +439,7 @@ class _StatBannerCardState extends State<_StatBannerCard>
           width: 130,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(22),
             boxShadow: [
               BoxShadow(
@@ -1034,12 +1036,12 @@ class _NotificationsTab extends StatelessWidget {
                           margin: const EdgeInsets.only(bottom: 10),
                           decoration: BoxDecoration(
                             color: n.isRead
-                                ? Colors.white
+                                ? (Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface)
                                 : AppTheme.primary.withOpacity(0.05),
                             borderRadius: BorderRadius.circular(18),
                             border: Border.all(
                                 color: n.isRead
-                                    ? Colors.grey[200]!
+                                    ? (Theme.of(context).brightness == Brightness.dark ? Colors.white.withOpacity(0.1) : Colors.grey[200]!)
                                     : AppTheme.primary
                                         .withOpacity(0.25)),
                             boxShadow: [
@@ -1063,7 +1065,9 @@ class _NotificationsTab extends StatelessWidget {
                                   gradient: n.isRead
                                       ? null
                                       : AppTheme.primaryGradient,
-                                  color: n.isRead ? Colors.grey[100] : null,
+                                  color: n.isRead
+                                      ? (Theme.of(context).brightness == Brightness.dark ? Colors.white.withOpacity(0.08) : Colors.grey[100])
+                                      : null,
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                                 child: Icon(Icons.notifications_rounded,
@@ -1175,6 +1179,17 @@ class _ProfileTab extends StatelessWidget {
                   () => Navigator.pushNamed(context, AppRoutes.studentProfile)),
               _ProfileTile(Icons.lock_outline_rounded, 'Change Password',
                   'Update your password', AppTheme.secondary, () {}),
+              rp.Consumer(
+                builder: (context, ref, child) {
+                  final themeMode = ref.watch(themeProvider);
+                  return _ProfileThemeTile(
+                    themeMode: themeMode,
+                    onChanged: (mode) {
+                      ref.read(themeProvider.notifier).setThemeMode(mode);
+                    },
+                  );
+                },
+              ),
               const SizedBox(height: 8),
               _ProfileTile(Icons.logout_rounded, 'Logout',
                   'Sign out of your account', AppTheme.error, () async {
@@ -1227,7 +1242,7 @@ class _ProfileTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
@@ -1260,13 +1275,83 @@ class _ProfileTile extends StatelessWidget {
             width: 30,
             height: 30,
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white.withOpacity(0.05)
+                  : Colors.grey[100],
               borderRadius: BorderRadius.circular(8),
             ),
             child:
                 Icon(Icons.chevron_right_rounded, color: Colors.grey[400], size: 18),
           ),
           onTap: onTap,
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfileThemeTile extends StatelessWidget {
+  final ThemeMode themeMode;
+  final ValueChanged<ThemeMode> onChanged;
+
+  const _ProfileThemeTile({
+    required this.themeMode,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = themeMode == ThemeMode.dark ||
+        (themeMode == ThemeMode.system &&
+            MediaQuery.of(context).platformBrightness == Brightness.dark);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2))
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: ListTile(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          leading: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: AppTheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Icon(
+              isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+              color: AppTheme.primary,
+              size: 22,
+            ),
+          ),
+          title: const Text('Dark Mode',
+              style: TextStyle(
+                  fontWeight: FontWeight.w600, fontSize: 14)),
+          subtitle: Text(
+            themeMode == ThemeMode.system
+                ? 'System Default'
+                : (isDark ? 'Enabled' : 'Disabled'),
+            style: TextStyle(color: Colors.grey[500], fontSize: 11),
+          ),
+          trailing: Switch(
+            value: isDark,
+            onChanged: (val) {
+              onChanged(val ? ThemeMode.dark : ThemeMode.light);
+            },
+            activeColor: AppTheme.primary,
+          ),
         ),
       ),
     );

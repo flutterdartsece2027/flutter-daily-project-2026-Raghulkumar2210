@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' as rp;
 import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../providers/auth_provider.dart';
 import '../../../providers/admin_provider.dart';
+import '../../../providers/theme_provider.dart';
 import '../../../widgets/common_widgets.dart';
 import 'admin_complaints_screen.dart';
 import 'admin_students_screen.dart';
@@ -73,6 +75,23 @@ class _AdminHomeTab extends StatelessWidget {
           backgroundColor: const Color(0xFF1E293B),
           automaticallyImplyLeading: false,
           actions: [
+            rp.Consumer(
+              builder: (context, ref, child) {
+                final themeMode = ref.watch(themeProvider);
+                final isDark = themeMode == ThemeMode.dark ||
+                    (themeMode == ThemeMode.system &&
+                        MediaQuery.of(context).platformBrightness == Brightness.dark);
+                return IconButton(
+                  icon: Icon(
+                    isDark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    ref.read(themeProvider.notifier).toggleTheme(!isDark);
+                  },
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.logout_rounded, color: Colors.white),
               onPressed: () async {

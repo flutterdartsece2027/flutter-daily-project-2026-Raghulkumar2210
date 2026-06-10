@@ -123,6 +123,7 @@ class ComplaintRepository {
       studentId: studentId,
       studentName: studentName,
       department: department,
+      imageUrl: imagePath,
       comments: [],
       timeline: [
         TimelineEvent(

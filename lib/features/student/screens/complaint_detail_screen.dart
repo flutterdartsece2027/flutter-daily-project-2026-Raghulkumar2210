@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
 import '../../../core/theme/app_theme.dart';
 import '../../../data/models/complaint_model.dart';
 import '../../../providers/auth_provider.dart';
@@ -66,7 +67,7 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
@@ -107,15 +108,68 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
                   const SizedBox(height: 12),
                   Text(c.description,
                       style:
-                          TextStyle(color: Colors.grey[700], height: 1.5)),
-                  if (c.imageUrl != null) ...[
+                          TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.85), height: 1.5)),
+                  if (c.imageUrl != null && c.imageUrl!.isNotEmpty) ...[
                     const SizedBox(height: 12),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(c.imageUrl!,
-                          height: 180,
-                          width: double.infinity,
-                          fit: BoxFit.cover),
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => Dialog(
+                            backgroundColor: Colors.transparent,
+                            insetPadding: EdgeInsets.zero,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () => Navigator.pop(context),
+                                  child: Container(
+                                    color: Colors.black.withOpacity(0.9),
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
+                                ),
+                                InteractiveViewer(
+                                  maxScale: 4.0,
+                                  child: c.imageUrl!.startsWith('data:image/')
+                                      ? Image.memory(
+                                          base64Decode(c.imageUrl!.split(',').last),
+                                          fit: BoxFit.contain,
+                                        )
+                                      : Image.network(
+                                          c.imageUrl!,
+                                          fit: BoxFit.contain,
+                                        ),
+                                ),
+                                Positioned(
+                                  top: 40,
+                                  right: 20,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.close_rounded, color: Colors.white, size: 30),
+                                    onPressed: () => Navigator.pop(context),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: c.imageUrl!.startsWith('data:image/')
+                            ? Image.memory(
+                                base64Decode(c.imageUrl!.split(',').last),
+                                height: 180,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                c.imageUrl!,
+                                height: 180,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
                     ),
                   ],
                   if (c.remarks != null) ...[
@@ -218,7 +272,7 @@ class _TimelineWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -243,7 +297,13 @@ class _TimelineWidget extends StatelessWidget {
                   ),
                 ),
                 if (!isLast)
-                  Container(width: 2, height: 40, color: Colors.grey[200]),
+                  Container(
+                    width: 2,
+                    height: 40,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white.withOpacity(0.12)
+                        : Colors.grey[200],
+                  ),
               ]),
               const SizedBox(width: 14),
               Expanded(
@@ -287,12 +347,12 @@ class _CommentBubble extends StatelessWidget {
       decoration: BoxDecoration(
         color: comment.isAdmin
             ? AppTheme.primary.withOpacity(0.06)
-            : Colors.white,
+            : (Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
             color: comment.isAdmin
                 ? AppTheme.primary.withOpacity(0.2)
-                : Colors.grey[200]!),
+                : (Theme.of(context).brightness == Brightness.dark ? Colors.white.withOpacity(0.12) : Colors.grey[200]!)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,7 +362,7 @@ class _CommentBubble extends StatelessWidget {
               radius: 14,
               backgroundColor: comment.isAdmin
                   ? AppTheme.primary.withOpacity(0.2)
-                  : Colors.grey[200],
+                  : (Theme.of(context).brightness == Brightness.dark ? Colors.white.withOpacity(0.08) : Colors.grey[200]),
               child: Icon(
                 comment.isAdmin
                     ? Icons.admin_panel_settings_rounded
@@ -335,7 +395,7 @@ class _CommentBubble extends StatelessWidget {
           const SizedBox(height: 8),
           Text(comment.comment,
               style: TextStyle(
-                  color: Colors.grey[700], fontSize: 13, height: 1.4)),
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.85), fontSize: 13, height: 1.4)),
         ],
       ),
     );

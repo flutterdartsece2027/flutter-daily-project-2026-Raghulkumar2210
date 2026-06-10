@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../providers/auth_provider.dart';
@@ -33,7 +34,11 @@ class _RaiseComplaintScreenState extends State<RaiseComplaintScreen> {
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final img = await picker.pickImage(
-        source: ImageSource.gallery, imageQuality: 80);
+      source: ImageSource.gallery,
+      maxWidth: 600,
+      maxHeight: 600,
+      imageQuality: 50,
+    );
     if (img != null && mounted) {
       context.read<ComplaintProvider>().pickImage(img);
     }
@@ -106,18 +111,18 @@ class _RaiseComplaintScreenState extends State<RaiseComplaintScreen> {
                         decoration: BoxDecoration(
                           color: selected
                               ? AppTheme.primary
-                              : Colors.white,
+                              : (Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                               color: selected
                                   ? AppTheme.primary
-                                  : Colors.grey[300]!),
+                                  : (Theme.of(context).brightness == Brightness.dark ? Colors.white.withOpacity(0.12) : Colors.grey[300]!)),
                         ),
                         child: Text(cat,
                             style: TextStyle(
                                 color: selected
                                     ? Colors.white
-                                    : Colors.grey[600],
+                                    : (Theme.of(context).brightness == Brightness.dark ? Colors.grey[400] : Colors.grey[600]),
                                 fontSize: 13,
                                 fontWeight: selected
                                     ? FontWeight.w600
@@ -156,19 +161,25 @@ class _RaiseComplaintScreenState extends State<RaiseComplaintScreen> {
                   height: 140,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                         color: cp.pickedImage != null
                             ? AppTheme.primary
-                            : Colors.grey[300]!),
+                            : (Theme.of(context).brightness == Brightness.dark ? Colors.white.withOpacity(0.12) : Colors.grey[300]!)),
                   ),
                   child: cp.pickedImage != null
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(13),
-                          child: Image.file(
-                              File(cp.pickedImage!.path),
-                              fit: BoxFit.cover),
+                          child: kIsWeb
+                              ? Image.network(
+                                  cp.pickedImage!.path,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.file(
+                                  File(cp.pickedImage!.path),
+                                  fit: BoxFit.cover,
+                                ),
                         )
                       : Column(
                           mainAxisAlignment: MainAxisAlignment.center,

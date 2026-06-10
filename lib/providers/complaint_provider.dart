@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
+import 'dart:convert';
 import '../data/repositories/complaint_repository.dart';
 import '../data/models/complaint_model.dart';
 
@@ -135,6 +136,14 @@ class ComplaintProvider extends ChangeNotifier {
   }) async {
     _setLoading(true); _setError(null);
     try {
+      String? base64Image;
+      if (_pickedImage != null) {
+        final bytes = await _pickedImage!.readAsBytes();
+        final extension = _pickedImage!.name.split('.').last.toLowerCase();
+        final mimeType = extension == 'png' ? 'image/png' : 'image/jpeg';
+        base64Image = 'data:$mimeType;base64,${base64.encode(bytes)}';
+      }
+
       final c = await _repo.raiseComplaint(
         title: title,
         description: description,
@@ -142,7 +151,7 @@ class ComplaintProvider extends ChangeNotifier {
         studentId: studentId,
         studentName: studentName,
         department: department,
-        imagePath: _pickedImage?.path,
+        imagePath: base64Image,
         latitude: latitude,
         longitude: longitude,
       );

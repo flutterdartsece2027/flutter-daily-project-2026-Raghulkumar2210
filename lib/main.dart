@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide ChangeNotifierProvider;
 import 'core/constants/app_routes.dart';
 import 'core/theme/app_theme.dart';
 import 'firebase_options.dart';
@@ -9,6 +10,7 @@ import 'providers/auth_provider.dart';
 import 'providers/complaint_provider.dart';
 import 'providers/admin_provider.dart';
 import 'providers/notification_provider.dart';
+import 'providers/theme_provider.dart';
 import 'features/auth/screens/splash_screen.dart';
 import 'features/auth/screens/role_selection_screen.dart';
 import 'features/auth/screens/student_login_screen.dart';
@@ -85,14 +87,20 @@ void main() async {
   
   await _seedAdmin();
   
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeProvider);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
@@ -104,6 +112,8 @@ class MyApp extends StatelessWidget {
         title: 'Student Complaint Portal',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: themeMode,
         initialRoute: AppRoutes.splash,
         routes: {
           AppRoutes.splash: (_) => const SplashScreen(),
