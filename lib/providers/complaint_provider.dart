@@ -194,6 +194,23 @@ class ComplaintProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> deleteComplaint(String id) async {
+    _setLoading(true);
+    _error = null;
+    try {
+      await _repo.deleteComplaint(id);
+      _complaints.removeWhere((c) => c.id == id);
+      if (_selected?.id == id) _selected = null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _setError(e.toString());
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   Future<void> fetchStats(String? studentId) async {
     try {
       _stats = await _repo.getStats(studentId);

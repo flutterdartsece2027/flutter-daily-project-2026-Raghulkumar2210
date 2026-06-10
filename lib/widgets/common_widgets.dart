@@ -211,6 +211,7 @@ class ComplaintCard extends StatelessWidget {
   final String status;
   final DateTime date;
   final VoidCallback onTap;
+  final VoidCallback? onDelete;
 
   const ComplaintCard({
     super.key,
@@ -219,6 +220,7 @@ class ComplaintCard extends StatelessWidget {
     required this.status,
     required this.date,
     required this.onTap,
+    this.onDelete,
   });
 
   Color get _statusColor {
@@ -331,6 +333,24 @@ class ComplaintCard extends StatelessWidget {
                           fontWeight: FontWeight.w700)),
                 ]),
               ),
+              if (onDelete != null) ...[
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: onDelete,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppTheme.error.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.delete_outline_rounded,
+                      color: AppTheme.error,
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

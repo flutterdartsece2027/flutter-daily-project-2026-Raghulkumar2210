@@ -766,8 +766,13 @@ class _AnimatedComplaintCard extends StatefulWidget {
   final int index;
   final dynamic complaint;
   final VoidCallback onTap;
-  const _AnimatedComplaintCard(
-      {required this.index, required this.complaint, required this.onTap});
+  final VoidCallback? onDelete;
+  const _AnimatedComplaintCard({
+    required this.index,
+    required this.complaint,
+    required this.onTap,
+    this.onDelete,
+  });
   @override
   State<_AnimatedComplaintCard> createState() =>
       _AnimatedComplaintCardState();
@@ -812,6 +817,7 @@ class _AnimatedComplaintCardState extends State<_AnimatedComplaintCard>
           status: widget.complaint.status,
           date: widget.complaint.createdAt,
           onTap: widget.onTap,
+          onDelete: widget.onDelete,
         ),
       ),
     );
@@ -952,13 +958,65 @@ class _ComplaintsTabState extends State<_ComplaintsTab> {
                   : ListView.builder(
                       padding: const EdgeInsets.fromLTRB(20, 4, 20, 80),
                       itemCount: filtered.length,
-                      itemBuilder: (_, i) => _AnimatedComplaintCard(
-                        index: i,
-                        complaint: filtered[i],
-                        onTap: () => Navigator.pushNamed(
-                            context, AppRoutes.complaintDetail,
-                            arguments: filtered[i].id),
-                      ),
+                      itemBuilder: (_, i) {
+                        final complaint = filtered[i];
+                        return _AnimatedComplaintCard(
+                          index: i,
+                          complaint: complaint,
+                          onTap: () => Navigator.pushNamed(
+                              context, AppRoutes.complaintDetail,
+                              arguments: complaint.id),
+                          onDelete: () async {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                title: const Row(
+                                  children: [
+                                    Icon(Icons.warning_amber_rounded, color: AppTheme.error),
+                                    SizedBox(width: 8),
+                                    Text('Delete Complaint'),
+                                  ],
+                                ),
+                                content: Text('Are you sure you want to delete the complaint "${complaint.title}"? This action cannot be undone.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, false),
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(color: Colors.grey[600]),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx, true),
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: AppTheme.error,
+                                    ),
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
+                              ),
+                            );
+
+                            if (confirm == true && context.mounted) {
+                              final success = await context
+                                  .read<ComplaintProvider>()
+                                  .deleteComplaint(complaint.id);
+                              if (success && context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Complaint deleted successfully'),
+                                    backgroundColor: AppTheme.success,
+                                    behavior: SnackBarBehavior.floating,
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                        );
+                      },
                     ),
         ),
       ]),

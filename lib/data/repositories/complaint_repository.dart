@@ -184,6 +184,10 @@ class ComplaintRepository {
     return ComplaintModel.fromFirestore(await _col.doc(complaintId).get());
   }
 
+  Future<void> deleteComplaint(String id) async {
+    await _col.doc(id).delete();
+  }
+
   Future<Map<String, int>> getStats(String? studentId) async {
     Query q = _col;
     if (studentId != null) q = q.where('studentId', isEqualTo: studentId);
