@@ -75,105 +75,120 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen>
       body: Container(
         decoration: const BoxDecoration(gradient: AppTheme.splashGradient),
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: [
-                const SizedBox(height: 50),
-                // Header
-                SlideTransition(
-                  position: _headerSlide,
-                  child: FadeTransition(
-                    opacity: _headerFade,
-                    child: Column(children: [
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                              color: Colors.white.withOpacity(0.3)),
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.school_rounded,
-                              size: 44, color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        'Student Complaint\nPortal',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 26,
-                          fontWeight: FontWeight.w800,
-                          height: 1.3,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Choose your role to get started',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.65),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ]),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight,
                   ),
-                ),
-                const SizedBox(height: 56),
-                // Student card
-                SlideTransition(
-                  position: _card1Slide,
-                  child: FadeTransition(
-                    opacity: _card1Fade,
-                    child: _RoleCard(
-                      gradient: AppTheme.studentCardGradient,
-                      icon: Icons.person_rounded,
-                      iconBg: Colors.white.withOpacity(0.2),
-                      title: 'Student',
-                      subtitle: 'Register & raise complaints',
-                      tag: 'LOGIN / REGISTER',
-                      tagColor: Colors.white.withOpacity(0.3),
-                      onTap: () =>
-                          Navigator.pushNamed(context, AppRoutes.studentLogin),
+                  child: IntrinsicHeight(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 40),
+                          // Header
+                          SlideTransition(
+                            position: _headerSlide,
+                            child: FadeTransition(
+                              opacity: _headerFade,
+                              child: Column(children: [
+                                Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.15),
+                                    borderRadius: BorderRadius.circular(24),
+                                    border: Border.all(
+                                        color: Colors.white.withOpacity(0.3)),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(Icons.school_rounded,
+                                        size: 44, color: Colors.white),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                const Text(
+                                  'Student Complaint\nPortal',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.w800,
+                                    height: 1.3,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Choose your role to get started',
+                                  style: TextStyle(
+                                    color: Colors.white.withOpacity(0.65),
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ]),
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+                          // Student card
+                          SlideTransition(
+                            position: _card1Slide,
+                            child: FadeTransition(
+                              opacity: _card1Fade,
+                              child: _RoleCard(
+                                gradient: AppTheme.studentCardGradient,
+                                icon: Icons.person_rounded,
+                                iconBg: Colors.white.withOpacity(0.2),
+                                title: 'Student',
+                                subtitle: 'Register & raise complaints',
+                                tag: 'LOGIN / REGISTER',
+                                tagColor: Colors.white.withOpacity(0.3),
+                                onTap: () =>
+                                    Navigator.pushNamed(context, AppRoutes.studentLogin),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 18),
+                          // Admin card
+                          SlideTransition(
+                            position: _card2Slide,
+                            child: FadeTransition(
+                              opacity: _card2Fade,
+                              child: _RoleCard(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFF0D0D2B), Color(0xFF2E1065)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                icon: Icons.admin_panel_settings_rounded,
+                                iconBg: AppTheme.primaryLight.withOpacity(0.25),
+                                title: 'Admin',
+                                subtitle: 'Manage & resolve complaints',
+                                tag: 'AUTHORIZED ONLY',
+                                tagColor: AppTheme.primaryLight.withOpacity(0.4),
+                                onTap: () =>
+                                    Navigator.pushNamed(context, AppRoutes.adminLogin),
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          const SizedBox(height: 24),
+                          Text(
+                            '© 2025 College Portal',
+                            style: TextStyle(
+                                color: Colors.white.withOpacity(0.35),
+                                fontSize: 12),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 18),
-                // Admin card
-                SlideTransition(
-                  position: _card2Slide,
-                  child: FadeTransition(
-                    opacity: _card2Fade,
-                    child: _RoleCard(
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF0D0D2B), Color(0xFF2E1065)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      icon: Icons.admin_panel_settings_rounded,
-                      iconBg: AppTheme.primaryLight.withOpacity(0.25),
-                      title: 'Admin',
-                      subtitle: 'Manage & resolve complaints',
-                      tag: 'AUTHORIZED ONLY',
-                      tagColor: AppTheme.primaryLight.withOpacity(0.4),
-                      onTap: () =>
-                          Navigator.pushNamed(context, AppRoutes.adminLogin),
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  '© 2025 College Portal',
-                  style: TextStyle(
-                      color: Colors.white.withOpacity(0.35),
-                      fontSize: 12),
-                ),
-                const SizedBox(height: 16),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ),

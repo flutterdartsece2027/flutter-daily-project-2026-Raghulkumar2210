@@ -148,7 +148,7 @@ class _AdminHomeTab extends StatelessWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                childAspectRatio: 1.4,
+                childAspectRatio: MediaQuery.of(context).size.width < 600 ? 1.25 : 1.4,
                 children: [
                   StatCard(
                     label: 'Total',

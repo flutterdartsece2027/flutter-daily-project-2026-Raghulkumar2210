@@ -39,67 +39,83 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-                  ),
-                ]),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Column(children: [
-                  Icon(Icons.lock_reset_rounded, size: 60, color: Colors.white),
-                  SizedBox(height: 12),
-                  Text('Forgot Password',
-                      style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 8),
-                  Text('Enter your email to receive reset link',
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
-                      textAlign: TextAlign.center),
-                ]),
-              ),
-              const SizedBox(height: 32),
-              Expanded(
+              child: IntrinsicHeight(
                 child: Container(
-                  decoration: const BoxDecoration(
-                    color: AppTheme.surface,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
-                  ),
-                  padding: const EdgeInsets.all(28),
-                  child: Form(
-                    key: _formKey,
+                  decoration: const BoxDecoration(gradient: AppTheme.primaryGradient),
+                  child: SafeArea(
                     child: Column(
                       children: [
-                        const SizedBox(height: 8),
-                        AppTextField(
-                          label: 'Email',
-                          controller: _emailCtrl,
-                          keyboardType: TextInputType.emailAddress,
-                          prefixIcon: Icons.email_outlined,
-                          validator: (v) => v!.isEmpty ? 'Enter email' : null,
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(children: [
+                            GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+                            ),
+                          ]),
                         ),
-                        const SizedBox(height: 24),
-                        GradientButton(
-                          text: 'Send Reset Link',
-                          loading: auth.loading,
-                          onTap: _submit,
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 24),
+                          child: Column(children: [
+                            Icon(Icons.lock_reset_rounded, size: 60, color: Colors.white),
+                            SizedBox(height: 12),
+                            Text('Forgot Password',
+                                style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                            SizedBox(height: 8),
+                            Text('Enter your email to receive reset link',
+                                style: TextStyle(color: Colors.white70, fontSize: 14),
+                                textAlign: TextAlign.center),
+                          ]),
+                        ),
+                        const SizedBox(height: 32),
+                        Expanded(
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              color: AppTheme.surface,
+                              borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(28),
+                              child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    AppTextField(
+                                      label: 'Email',
+                                      controller: _emailCtrl,
+                                      keyboardType: TextInputType.emailAddress,
+                                      prefixIcon: Icons.email_outlined,
+                                      validator: (v) => v!.isEmpty ? 'Enter email' : null,
+                                    ),
+                                    const SizedBox(height: 24),
+                                    GradientButton(
+                                      text: 'Send Reset Link',
+                                      loading: auth.loading,
+                                      onTap: _submit,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

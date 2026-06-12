@@ -62,149 +62,172 @@ class _AdminLoginScreenState extends State<AdminLoginScreen>
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(gradient: AppTheme.adminGradient),
-        child: SafeArea(
-          child: Column(children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                          color: Colors.white.withOpacity(0.2)),
-                    ),
-                    child: const Icon(Icons.arrow_back_ios_new_rounded,
-                        color: Colors.white, size: 18),
-                  ),
-                ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(14),
-                    decoration: BoxDecoration(
-                      gradient: AppTheme.primaryGradient,
-                      borderRadius: BorderRadius.circular(18),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.primary.withOpacity(0.5),
-                          blurRadius: 20,
-                          offset: const Offset(0, 6),
-                        )
-                      ],
-                    ),
-                    child: const Icon(
-                        Icons.admin_panel_settings_rounded,
-                        color: Colors.white,
-                        size: 32),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text('Admin Portal',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 28,
-                          fontWeight: FontWeight.w800)),
-                  const SizedBox(height: 4),
-                  Text('Restricted access — authorized only',
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.55),
-                          fontSize: 13)),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: SlideTransition(
-                position: _slide,
-                child: FadeTransition(
-                  opacity: _fade,
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: AppTheme.surface,
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(36)),
-                    ),
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.fromLTRB(28, 32, 28, 28),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(children: [
-                          // Info banner
-                          Container(
-                            padding: const EdgeInsets.all(14),
-                            decoration: BoxDecoration(
-                              color:
-                                  AppTheme.primary.withOpacity(0.07),
-                              borderRadius: BorderRadius.circular(14),
-                              border: Border.all(
-                                  color: AppTheme.primary
-                                      .withOpacity(0.2)),
+              child: IntrinsicHeight(
+                child: Container(
+                  decoration: const BoxDecoration(gradient: AppTheme.adminGradient),
+                  child: SafeArea(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Back button
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                      color: Colors.white.withOpacity(0.2)),
+                                ),
+                                child: const Icon(Icons.arrow_back_ios_new_rounded,
+                                    color: Colors.white, size: 18),
+                              ),
                             ),
-                            child: Row(children: [
-                              const Icon(Icons.shield_outlined,
-                                  color: AppTheme.primary, size: 20),
-                              const SizedBox(width: 10),
-                              const Expanded(
-                                child: Text(
-                                  'Use the credentials provided by your institution.',
+                          ),
+                        ),
+                        // Header
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  gradient: AppTheme.primaryGradient,
+                                  borderRadius: BorderRadius.circular(18),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: AppTheme.primary.withOpacity(0.5),
+                                      blurRadius: 20,
+                                      offset: const Offset(0, 6),
+                                    )
+                                  ],
+                                ),
+                                child: const Icon(
+                                    Icons.admin_panel_settings_rounded,
+                                    color: Colors.white,
+                                    size: 32),
+                              ),
+                              const SizedBox(height: 16),
+                              const Text('Admin Portal',
                                   style: TextStyle(
-                                      color: AppTheme.primary,
-                                      fontSize: 12,
-                                      height: 1.4),
+                                      color: Colors.white,
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.w800)),
+                              const SizedBox(height: 4),
+                              Text('Restricted access — authorized only',
+                                  style: TextStyle(
+                                      color: Colors.white.withOpacity(0.55),
+                                      fontSize: 13)),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // Form card
+                        Expanded(
+                          child: SlideTransition(
+                            position: _slide,
+                            child: FadeTransition(
+                              opacity: _fade,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  color: AppTheme.surface,
+                                  borderRadius:
+                                      BorderRadius.vertical(top: Radius.circular(36)),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(28, 32, 28, 28),
+                                  child: Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        // Info banner
+                                        Container(
+                                          padding: const EdgeInsets.all(14),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                AppTheme.primary.withOpacity(0.07),
+                                            borderRadius: BorderRadius.circular(14),
+                                            border: Border.all(
+                                                color: AppTheme.primary
+                                                    .withOpacity(0.2)),
+                                          ),
+                                          child: Row(children: [
+                                            const Icon(Icons.shield_outlined,
+                                                color: AppTheme.primary, size: 20),
+                                            const SizedBox(width: 10),
+                                            const Expanded(
+                                              child: Text(
+                                                'Use the credentials provided by your institution.',
+                                                style: TextStyle(
+                                                    color: AppTheme.primary,
+                                                    fontSize: 12,
+                                                    height: 1.4),
+                                              ),
+                                            ),
+                                          ]),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        AppTextField(
+                                          label: 'Admin Email',
+                                          controller: _emailCtrl,
+                                          keyboardType: TextInputType.emailAddress,
+                                          prefixIcon: Icons.email_outlined,
+                                          validator: (v) =>
+                                              v!.isEmpty ? 'Enter admin email' : null,
+                                        ),
+                                        const SizedBox(height: 16),
+                                        AppTextField(
+                                          label: 'Password',
+                                          controller: _passCtrl,
+                                          isPassword: true,
+                                          prefixIcon: Icons.lock_outline_rounded,
+                                          validator: (v) =>
+                                              v!.isEmpty ? 'Enter password' : null,
+                                        ),
+                                        const SizedBox(height: 28),
+                                        GradientButton(
+                                          text: 'Login as Admin',
+                                          loading: auth.loading,
+                                          gradient: const LinearGradient(
+                                            colors: [
+                                              Color(0xFF6C3CE1),
+                                              Color(0xFF3A7EFF),
+                                            ],
+                                          ),
+                                          onTap: _login,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ]),
-                          ),
-                          const SizedBox(height: 20),
-                          AppTextField(
-                            label: 'Admin Email',
-                            controller: _emailCtrl,
-                            keyboardType: TextInputType.emailAddress,
-                            prefixIcon: Icons.email_outlined,
-                            validator: (v) =>
-                                v!.isEmpty ? 'Enter admin email' : null,
-                          ),
-                          const SizedBox(height: 16),
-                          AppTextField(
-                            label: 'Password',
-                            controller: _passCtrl,
-                            isPassword: true,
-                            prefixIcon: Icons.lock_outline_rounded,
-                            validator: (v) =>
-                                v!.isEmpty ? 'Enter password' : null,
-                          ),
-                          const SizedBox(height: 28),
-                          GradientButton(
-                            text: 'Login as Admin',
-                            loading: auth.loading,
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFF6C3CE1),
-                                Color(0xFF3A7EFF),
-                              ],
                             ),
-                            onTap: _login,
                           ),
-                        ]),
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
             ),
-          ]),
-        ),
+          );
+        },
       ),
     );
   }

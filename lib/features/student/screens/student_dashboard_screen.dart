@@ -371,7 +371,7 @@ class _StatsBanner extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onSurface)),
         const SizedBox(height: 14),
         SizedBox(
-          height: 120,
+          height: 130,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: stats.length,
@@ -437,7 +437,7 @@ class _StatBannerCardState extends State<_StatBannerCard>
         opacity: _fade,
         child: Container(
           width: 130,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
             color: Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(22),
@@ -449,40 +449,50 @@ class _StatBannerCardState extends State<_StatBannerCard>
               ),
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  gradient: widget.item.gradient,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(widget.item.icon, color: Colors.white, size: 20),
-              ),
-              Column(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.topLeft,
+            child: SizedBox(
+              width: 102, // 130 - 28 padding
+              height: 106, // 130 height - 24 padding
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _CountUpText(
-                    end: widget.item.value,
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w900,
-                      color: widget.item.gradient.colors.first,
-                      height: 1,
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      gradient: widget.item.gradient,
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                    child: Icon(widget.item.icon, color: Colors.white, size: 20),
                   ),
-                  const SizedBox(height: 2),
-                  Text(widget.item.label,
-                      style: const TextStyle(
-                          fontSize: 11,
-                          color: Color(0xFF8A94A6),
-                          fontWeight: FontWeight.w500)),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _CountUpText(
+                        end: widget.item.value,
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w900,
+                          color: widget.item.gradient.colors.first,
+                          height: 1,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(widget.item.label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 11,
+                              color: Color(0xFF8A94A6),
+                              fontWeight: FontWeight.w500)),
+                    ],
+                  ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
