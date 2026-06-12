@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import '../data/repositories/notification_repository.dart';
 import '../data/models/notification_model.dart';
 
@@ -7,6 +8,8 @@ class NotificationProvider extends ChangeNotifier {
 
   List<NotificationModel> _notifications = [];
   bool _loading = false;
+  StreamSubscription<List<NotificationModel>>? _notificationsSubscription;
+  String? _currentUserId;
 
   List<NotificationModel> get notifications => _notifications;
   bool get loading => _loading;
@@ -59,5 +62,47 @@ class NotificationProvider extends ChangeNotifier {
             ))
         .toList();
     notifyListeners();
+  }
+
+  void listenToNotifications(String userId) {
+    if (userId.isEmpty) {
+      _notifications = [];
+      _loading = false;
+      notifyListeners();
+      return;
+    }
+    if (_currentUserId == userId) return; // Already listening
+
+    _currentUserId = userId;
+    _loading = true;
+    notifyListeners();
+
+    _notificationsSubscription?.cancel();
+    _notificationsSubscription = _repo.getNotificationsStream(userId).listen(
+      (notifications) {
+        _notifications = notifications;
+        _loading = false;
+        notifyListeners();
+      },
+      onError: (e) {
+        _loading = false;
+        notifyListeners();
+      },
+    );
+  }
+
+  void reset() {
+    _notificationsSubscription?.cancel();
+    _notificationsSubscription = null;
+    _notifications = [];
+    _currentUserId = null;
+    _loading = false;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _notificationsSubscription?.cancel();
+    super.dispose();
   }
 }

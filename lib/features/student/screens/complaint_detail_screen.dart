@@ -36,12 +36,22 @@ class _ComplaintDetailScreenState extends State<ComplaintDetailScreen> {
     if (_commentCtrl.text.trim().isEmpty) return;
     final cp = context.read<ComplaintProvider>();
     final auth = context.read<AuthProvider>();
-    final student = auth.student;
+    final String userId;
+    final String userName;
+    final bool isAdmin = auth.isAdmin;
+    if (isAdmin) {
+      userId = auth.admin?.id ?? '';
+      userName = auth.admin?.name ?? 'Admin';
+    } else {
+      userId = auth.student?.id ?? '';
+      userName = auth.student?.name ?? '';
+    }
     final ok = await cp.addComment(
       cp.selected!.id,
       _commentCtrl.text.trim(),
-      student?.id ?? '',
-      student?.name ?? '',
+      userId,
+      userName,
+      isAdmin: isAdmin,
     );
     if (ok) _commentCtrl.clear();
   }

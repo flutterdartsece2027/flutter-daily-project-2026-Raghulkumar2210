@@ -22,16 +22,29 @@ class NotificationModel {
   });
 
   factory NotificationModel.fromFirestore(DocumentSnapshot doc) {
-    final d = doc.data() as Map<String, dynamic>;
+    final d = doc.data() as Map<String, dynamic>? ?? {};
+    
+    DateTime parsedDate;
+    final rawCreated = d['createdAt'];
+    if (rawCreated is Timestamp) {
+      parsedDate = rawCreated.toDate();
+    } else if (rawCreated is String) {
+      parsedDate = DateTime.tryParse(rawCreated) ?? DateTime.now();
+    } else if (rawCreated is int) {
+      parsedDate = DateTime.fromMillisecondsSinceEpoch(rawCreated);
+    } else {
+      parsedDate = DateTime.now();
+    }
+
     return NotificationModel(
       id: doc.id,
       title: d['title'] ?? '',
       message: d['message'] ?? '',
-      isRead: d['isRead'] ?? false,
+      isRead: d['isRead'] == true,
       type: d['type'] ?? 'general',
-      complaintId: d['complaintId'],
+      complaintId: d['complaintId']?.toString(),
       userId: d['userId'] ?? '',
-      createdAt: (d['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      createdAt: parsedDate,
     );
   }
 

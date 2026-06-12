@@ -11,6 +11,7 @@ import 'providers/complaint_provider.dart';
 import 'providers/admin_provider.dart';
 import 'providers/notification_provider.dart';
 import 'providers/theme_provider.dart';
+import 'providers/connectivity_provider.dart';
 import 'features/auth/screens/splash_screen.dart';
 import 'features/auth/screens/role_selection_screen.dart';
 import 'features/auth/screens/student_login_screen.dart';
@@ -107,6 +108,7 @@ class MyApp extends ConsumerWidget {
         ChangeNotifierProvider(create: (_) => ComplaintProvider()),
         ChangeNotifierProvider(create: (_) => AdminProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
+        ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
       ],
       child: MaterialApp(
         title: 'Student Complaint Portal',

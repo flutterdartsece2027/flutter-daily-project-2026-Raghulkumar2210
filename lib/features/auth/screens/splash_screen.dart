@@ -6,6 +6,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/app_routes.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../providers/auth_provider.dart';
+import '../../../providers/connectivity_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -29,6 +30,9 @@ class _SplashScreenState extends State<SplashScreen>
 
   Timer? _textTimer;
   Timer? _navigationTimer;
+  ConnectivityProvider? _connectivityProvider;
+  bool _isOffline = false;
+  bool _animationFinished = false;
 
   @override
   void initState() {
@@ -62,29 +66,61 @@ class _SplashScreenState extends State<SplashScreen>
     _textTimer = Timer(const Duration(milliseconds: 600), () {
       if (mounted) _textCtrl.forward();
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _connectivityProvider = context.read<ConnectivityProvider>();
+      _connectivityProvider!.addListener(_onConnectivityChanged);
+    });
+
     _navigate();
+  }
+
+  void _onConnectivityChanged() {
+    if (_connectivityProvider != null && _connectivityProvider!.isOnline) {
+      if (_animationFinished && _isOffline) {
+        setState(() {
+          _isOffline = false;
+        });
+        _performNavigation();
+      }
+    }
   }
 
   void _navigate() {
     _navigationTimer = Timer(const Duration(milliseconds: 3500), () async {
       if (!mounted) return;
-      final auth = context.read<AuthProvider>();
-      await auth.checkLoginStatus();
-      if (!mounted) return;
-      if (auth.isStudent) {
-        Navigator.pushReplacementNamed(context, AppRoutes.studentDashboard);
-      } else if (auth.isAdmin) {
-        Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
+      _animationFinished = true;
+      final conn = context.read<ConnectivityProvider>();
+      if (conn.isOnline) {
+        _performNavigation();
       } else {
-        Navigator.pushReplacementNamed(context, AppRoutes.roleSelection);
+        setState(() {
+          _isOffline = true;
+        });
       }
     });
+  }
+
+  Future<void> _performNavigation() async {
+    final auth = context.read<AuthProvider>();
+    await auth.checkLoginStatus();
+    if (!mounted) return;
+    if (auth.isStudent) {
+      Navigator.pushReplacementNamed(context, AppRoutes.studentDashboard);
+    } else if (auth.isAdmin) {
+      Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
+    } else {
+      Navigator.pushReplacementNamed(context, AppRoutes.roleSelection);
+    }
   }
 
   @override
   void dispose() {
     _textTimer?.cancel();
     _navigationTimer?.cancel();
+    if (_connectivityProvider != null) {
+      _connectivityProvider!.removeListener(_onConnectivityChanged);
+    }
     _logoCtrl.dispose();
     _textCtrl.dispose();
     _pulseCtrl.dispose();
@@ -203,18 +239,80 @@ class _SplashScreenState extends State<SplashScreen>
                         const SizedBox(height: 80),
                         FadeTransition(
                           opacity: _textFade,
-                          child: Column(children: [
-                            _AnimatedDots(),
-                            const SizedBox(height: 14),
-                            Text(
-                              AppConstants.appName,
-                              style: TextStyle(
-                                color: Colors.white.withOpacity(0.4),
-                                fontSize: 11,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                          ]),
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 500),
+                            child: _isOffline
+                                ? Container(
+                                    key: const ValueKey('offline_ui'),
+                                    margin: const EdgeInsets.symmetric(horizontal: 40),
+                                    padding: const EdgeInsets.all(24),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.08),
+                                      borderRadius: BorderRadius.circular(24),
+                                      border: Border.all(color: Colors.white.withOpacity(0.15)),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            color: Colors.redAccent.withOpacity(0.15),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.wifi_off_rounded,
+                                            color: Colors.redAccent,
+                                            size: 32,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        const Text(
+                                          'No Internet Connection',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Please check your connection. The portal will automatically proceed once internet is restored.',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.white.withOpacity(0.7),
+                                            fontSize: 12,
+                                            height: 1.4,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        const SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Column(
+                                    key: const ValueKey('online_ui'),
+                                    children: [
+                                      _AnimatedDots(),
+                                      const SizedBox(height: 14),
+                                      Text(
+                                        AppConstants.appName,
+                                        style: TextStyle(
+                                          color: Colors.white.withOpacity(0.4),
+                                          fontSize: 11,
+                                          letterSpacing: 2,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
                         ),
                       ],
                     ),

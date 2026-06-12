@@ -4,10 +4,13 @@ import '../data/repositories/admin_repository.dart';
 import '../data/repositories/complaint_repository.dart';
 import '../data/models/user_model.dart';
 import '../data/models/complaint_model.dart';
+import '../data/repositories/notification_repository.dart';
+import '../data/models/notification_model.dart';
 
 class AdminProvider extends ChangeNotifier {
   final AdminRepository _adminRepo = AdminRepository();
   final ComplaintRepository _complaintRepo = ComplaintRepository();
+  final NotificationRepository _notificationRepo = NotificationRepository();
 
   List<UserModel> _students = [];
   List<ComplaintModel> _complaints = [];
@@ -81,6 +84,21 @@ class AdminProvider extends ChangeNotifier {
       final idx = _complaints.indexWhere((c) => c.id == id);
       if (idx != -1) _complaints[idx] = updated;
       notifyListeners();
+
+      // Send notification to the student
+      await _notificationRepo.createNotification(
+        NotificationModel(
+          id: '',
+          title: 'Complaint Status: $status',
+          message: 'Your complaint "${updated.title}" is now "$status".${remarks != null && remarks.isNotEmpty ? "\nRemarks: $remarks" : ""}',
+          isRead: false,
+          type: 'status_update',
+          complaintId: id,
+          userId: updated.studentId,
+          createdAt: DateTime.now(),
+        ),
+      );
+
       return true;
     } catch (e) {
       _setError(e.toString());
@@ -147,6 +165,19 @@ class AdminProvider extends ChangeNotifier {
     } finally {
       _setLoading(false);
     }
+  }
+
+  void reset() {
+    _complaintsSubscription?.cancel();
+    _complaintsSubscription = null;
+    _students = [];
+    _complaints = [];
+    _dashStats = {};
+    _monthlyReport = {};
+    _deptReport = {};
+    _loading = false;
+    _error = null;
+    notifyListeners();
   }
 
   @override

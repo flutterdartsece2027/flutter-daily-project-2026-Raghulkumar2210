@@ -27,7 +27,7 @@ class _StudentDashboardScreenState extends State<StudentDashboardScreen> {
       final auth = context.read<AuthProvider>();
       final studentId = auth.student?.id ?? '';
       context.read<ComplaintProvider>().fetchMyComplaints(studentId);
-      context.read<NotificationProvider>().fetchNotifications(studentId);
+      context.read<NotificationProvider>().listenToNotifications(studentId);
     });
   }
 
@@ -1251,6 +1251,8 @@ class _ProfileTab extends StatelessWidget {
               const SizedBox(height: 8),
               _ProfileTile(Icons.logout_rounded, 'Logout',
                   'Sign out of your account', AppTheme.error, () async {
+                context.read<NotificationProvider>().reset();
+                context.read<ComplaintProvider>().reset();
                 await auth.logout();
                 if (context.mounted) {
                   Navigator.pushNamedAndRemoveUntil(

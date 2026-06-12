@@ -1,0 +1,3 @@
+bool getPlatformOnlineStatus() {
+  return true;
+}

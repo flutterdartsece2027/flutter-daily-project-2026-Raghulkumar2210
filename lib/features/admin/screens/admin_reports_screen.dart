@@ -66,7 +66,7 @@ class _AdminReportsScreenState extends State<AdminReportsScreen>
           ),
           TabBar(
             controller: _tabController,
-            labelColor: AppTheme.primary,
+            labelColor: const Color.fromARGB(255, 116, 65, 220),
             unselectedLabelColor: Colors.grey,
             indicatorColor: AppTheme.primary,
             tabs: const [

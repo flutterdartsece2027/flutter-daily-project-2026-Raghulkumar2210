@@ -95,6 +95,7 @@ class _AdminHomeTab extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.logout_rounded, color: Colors.white),
               onPressed: () async {
+                context.read<AdminProvider>().reset();
                 await auth.logout();
                 if (context.mounted) {
                   Navigator.pushNamedAndRemoveUntil(context, AppRoutes.roleSelection, (r) => false);

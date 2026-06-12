@@ -17,7 +17,7 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
         state = ThemeMode.values[themeIndex];
       }
     } catch (_) {
-      // Fallback to system theme on error
+      
     }
   }
 

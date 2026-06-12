@@ -13,6 +13,24 @@ class NotificationRepository {
     return list;
   }
 
+  Stream<List<NotificationModel>> getNotificationsStream(String userId) {
+    if (userId.isEmpty) {
+      return Stream.value([]);
+    }
+    return _col
+        .where('userId', isEqualTo: userId)
+        .snapshots(includeMetadataChanges: true)
+        .map((snap) {
+          final list = snap.docs.map(NotificationModel.fromFirestore).toList();
+          list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          return list;
+        })
+        .handleError((e) {
+          print('Error in getNotificationsStream: $e');
+          return <NotificationModel>[];
+        });
+  }
+
   Future<void> markAsRead(String id) async {
     await _col.doc(id).update({'isRead': true});
   }

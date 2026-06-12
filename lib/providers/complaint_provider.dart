@@ -4,9 +4,12 @@ import 'dart:async';
 import 'dart:convert';
 import '../data/repositories/complaint_repository.dart';
 import '../data/models/complaint_model.dart';
+import '../data/repositories/notification_repository.dart';
+import '../data/models/notification_model.dart';
 
 class ComplaintProvider extends ChangeNotifier {
   final ComplaintRepository _repo = ComplaintRepository();
+  final NotificationRepository _notificationRepo = NotificationRepository();
 
   List<ComplaintModel> _complaints = [];
   ComplaintModel? _selected;
@@ -187,6 +190,22 @@ class ComplaintProvider extends ChangeNotifier {
       _selected = await _repo.addComment(
           complaintId, comment, userId, userName, isAdmin: isAdmin);
       notifyListeners();
+
+      if (isAdmin && _selected != null) {
+        await _notificationRepo.createNotification(
+          NotificationModel(
+            id: '',
+            title: 'New Admin Response',
+            message: 'Admin commented on your complaint "${_selected!.title}": "$comment"',
+            isRead: false,
+            type: 'admin_comment',
+            complaintId: complaintId,
+            userId: _selected!.studentId,
+            createdAt: DateTime.now(),
+          ),
+        );
+      }
+
       return true;
     } catch (e) {
       _setError(e.toString());
@@ -220,6 +239,20 @@ class ComplaintProvider extends ChangeNotifier {
 
   void pickImage(XFile? file) { _pickedImage = file; notifyListeners(); }
   void clearError() => _setError(null);
+
+  void reset() {
+    _complaintsSubscription?.cancel();
+    _complaintsSubscription = null;
+    _selectedSubscription?.cancel();
+    _selectedSubscription = null;
+    _complaints = [];
+    _selected = null;
+    _currentStudentId = null;
+    _loading = false;
+    _error = null;
+    _pickedImage = null;
+    notifyListeners();
+  }
 
   @override
   void dispose() {
